@@ -27,6 +27,7 @@ export class AuthService {
         email: signupDto.email,
         password: hashedPassword,
         name: signupDto.name,
+        role: signupDto.role || 'NETWORK_ADMIN',
       },
     });
 
