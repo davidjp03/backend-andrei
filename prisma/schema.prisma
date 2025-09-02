@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(NETWORK_ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  daemonReports     DaemonReport[]     @relation("DaemonReports")
+  resistanceReports ResistanceReport[] @relation("ResistanceReports")
+
+  // Campos inversos para las relaciones
+  punishments Punishment[]
+  rewards     Reward[]
+}
+
+model DaemonReport {
+  id        Int      @id @default(autoincrement())
+  daemon    User     @relation("DaemonReports", fields: [daemonId], references: [id])
+  daemonId  Int
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model ResistanceReport {
+  id          Int      @id @default(autoincrement())
+  submittedBy User?    @relation("ResistanceReports", fields: [userId], references: [id])
+  userId      Int?
+  content     String
+  isAnonymous Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Punishment {
+  id        Int      @id @default(autoincrement())
+  daemon    User     @relation(fields: [daemonId], references: [id])
+  daemonId  Int
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model Reward {
+  id          Int      @id @default(autoincrement())
+  daemon      User     @relation(fields: [daemonId], references: [id])
+  daemonId    Int
+  description String
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+  ANDREI
+  DAEMON
+  NETWORK_ADMIN
+}
