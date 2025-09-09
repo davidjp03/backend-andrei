@@ -80,6 +80,41 @@ npm run docker:run      # Start containers
 npm run docker:stop     # Stop containers
 ```
 
+### ☸️ Kubernetes Deployment
+
+**Prerequisites:**
+- Docker Desktop with Kubernetes enabled
+- kubectl configured
+
+1. **Deploy to Kubernetes**
+```bash
+npm run k8s:deploy
+```
+
+2. **Check deployment status**
+```bash
+kubectl get pods -n parcial-backend
+kubectl get services -n parcial-backend
+```
+
+3. **View logs**
+```bash
+kubectl logs -f deployment/parcial-backend-app -n parcial-backend
+```
+
+4. **Cleanup resources**
+```bash
+npm run k8s:cleanup
+```
+
+### 🎯 Kubernetes Features
+- **High Availability**: 2 app replicas
+- **Persistent Storage**: PostgreSQL data persistence
+- **Health Checks**: Liveness and readiness probes
+- **Load Balancing**: External LoadBalancer service
+- **Configuration Management**: ConfigMaps and Secrets
+- **Database Migrations**: Automated via Kubernetes Jobs
+
 ## API Endpoints
 
 ### Authentication

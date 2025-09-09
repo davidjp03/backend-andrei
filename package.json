@@ -21,7 +21,9 @@
     "docker:build": "docker build -t parcial-backend .",
     "docker:run": "docker-compose up -d",
     "docker:stop": "docker-compose down",
-    "prisma:migrate:docker": "npx prisma migrate deploy && npx prisma generate"
+    "prisma:migrate:docker": "npx prisma migrate deploy && npx prisma generate",
+    "k8s:deploy": "bash k8s/deploy.sh",
+    "k8s:cleanup": "bash k8s/cleanup.sh"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

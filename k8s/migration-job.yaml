@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prisma-migration
+  namespace: parcial-backend
+spec:
+  template:
+    spec:
+      containers:
+      - name: migration
+        image: parcial-backend-app:latest
+        imagePullPolicy: Never
+        command: ["npx", "prisma", "migrate", "deploy"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: DATABASE_URL
+      restartPolicy: OnFailure
