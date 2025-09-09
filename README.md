@@ -1,98 +1,187 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Parcial Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS backend application with JWT authentication and role-based access control.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **JWT Authentication** - Secure login/signup system
+- **Role-Based Access Control** - ANDREI, DAEMON, NETWORK_ADMIN roles
+- **PostgreSQL Database** - With Prisma ORM
+- **Docker Support** - Containerized deployment
+- **RESTful API** - Complete CRUD operations
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Roles & Permissions
 
-## Project setup
+### 🔴 ANDREI (Super Administrator)
+- Full platform control
+- View/edit all data
+- Assign punishments/rewards to daemons
+- Access all endpoints
 
+### 🤖 DAEMON
+- Submit resistance reports
+- Track personal statistics
+- View own punishments/rewards
+- Access daemon-specific endpoints
+
+### 🌐 NETWORK_ADMIN
+- Access resistance page (tips/memes)
+- Submit anonymous reports
+- Basic user functionality
+
+## Quick Start
+
+### 🚀 Local Development
+
+1. **Install dependencies**
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
-
+2. **Setup environment**
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cp .env.example .env
+# Edit .env with your database URL and JWT secret
 ```
 
-## Run tests
-
+3. **Setup database**
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npx prisma migrate dev
+npx prisma generate
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+4. **Start development server**
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+API available at: http://localhost:3000
 
-## Resources
+### 🐳 Docker Deployment
 
-Check out a few resources that may come in handy when working with NestJS:
+1. **Start with Docker Compose**
+```bash
+npm run docker:run
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+2. **Run database migrations**
+```bash
+docker-compose exec app npx prisma migrate deploy
+```
 
-## Support
+3. **Access application**
+- API: http://localhost:3000
+- Database: localhost:5432
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 🔧 Docker Commands
+```bash
+npm run docker:build    # Build image
+npm run docker:run      # Start containers
+npm run docker:stop     # Stop containers
+```
 
-## Stay in touch
+## API Endpoints
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Authentication
+```
+POST /auth/signup    # Register user
+POST /auth/login     # Login user
+```
 
-## License
+### Admin (ANDREI only)
+```
+GET  /admin/users        # All users
+GET  /admin/reports      # All reports
+GET  /admin/daemons      # All daemons
+POST /admin/punishments  # Create punishment
+POST /admin/rewards      # Create reward
+GET  /admin/statistics   # Platform stats
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Reports
+```
+POST /reports/daemon        # Submit daemon report (DAEMON+)
+GET  /reports/daemon/my     # Own daemon reports (DAEMON+)
+POST /reports/resistance    # Submit resistance report (ALL)
+GET  /reports/resistance    # View resistance reports (ALL)
+```
+
+### Users
+```
+GET /users/profile      # Own profile (ALL)
+GET /users/statistics   # Own statistics (DAEMON+)
+GET /users/punishments  # Own punishments (DAEMON+)
+GET /users/rewards      # Own rewards (DAEMON+)
+```
+
+### Resistance
+```
+GET /resistance/tips    # Survival tips (ALL)
+GET /resistance/memes   # Memes (ALL)
+GET /resistance/status  # Network status (ALL)
+```
+
+## Usage Examples
+
+### Signup as DAEMON
+```bash
+curl -X POST http://localhost:3000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "daemon@example.com",
+    "password": "password123",
+    "name": "Daemon Unit 001",
+    "role": "DAEMON"
+  }'
+```
+
+### Login
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "daemon@example.com",
+    "password": "password123"
+  }'
+```
+
+### Access Protected Endpoint
+```bash
+curl -X GET http://localhost:3000/users/profile \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Environment Variables
+
+```env
+DATABASE_URL=postgresql://user:password@host:port/database
+JWT_SECRET=your-super-secret-jwt-key
+```
+
+## Tech Stack
+
+- **Framework**: NestJS
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Authentication**: JWT + Passport
+- **Validation**: class-validator
+- **Containerization**: Docker + Docker Compose
+
+## Development
+
+```bash
+npm run start:dev    # Development mode
+npm run build        # Build for production
+npm run start:prod   # Production mode
+npm run test         # Run tests
+npm run lint         # Lint code
+```
+
+## Database
+
+```bash
+npx prisma studio           # Database GUI
+npx prisma migrate dev      # Create migration
+npx prisma migrate deploy   # Apply migrations
+npx prisma generate         # Generate client
+```
