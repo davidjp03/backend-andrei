@@ -1,4 +1,8 @@
 import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
+
+interface AuthRequest extends Request {
+  user: { id: number; role: string };
+}
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -13,21 +17,21 @@ export class ReportsController {
   @Post('daemon')
   @UseGuards(RolesGuard)
   @Roles(Role.DAEMON, Role.ANDREI)
-  createDaemonReport(@Request() req, @Body() data: { content: string }) {
+  createDaemonReport(@Request() req: AuthRequest, @Body() data: { content: string }) {
     return this.reportsService.createDaemonReport(req.user.id, data.content);
   }
 
   @Get('daemon/my')
   @UseGuards(RolesGuard)
   @Roles(Role.DAEMON, Role.ANDREI)
-  getMyDaemonReports(@Request() req) {
+  getMyDaemonReports(@Request() req: AuthRequest) {
     return this.reportsService.getMyDaemonReports(req.user.id);
   }
 
   @Post('resistance')
   @UseGuards(RolesGuard)
   @Roles(Role.NETWORK_ADMIN, Role.DAEMON, Role.ANDREI)
-  createResistanceReport(@Request() req, @Body() data: { content: string; isAnonymous?: boolean }) {
+  createResistanceReport(@Request() req: AuthRequest, @Body() data: { content: string; isAnonymous?: boolean }) {
     return this.reportsService.createResistanceReport(req.user.id, data);
   }
 
