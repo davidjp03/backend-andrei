@@ -115,6 +115,26 @@ npm run k8s:cleanup
 - **Configuration Management**: ConfigMaps and Secrets
 - **Database Migrations**: Automated via Kubernetes Jobs
 
+### ☁️ Cloud Deployment
+
+**CI/CD with GitHub Actions** - Automated testing and deployment
+
+**AWS ECS Fargate (Recommended)**
+```bash
+# Setup AWS infrastructure
+chmod +x .aws/setup.sh
+./.aws/setup.sh
+
+# Set GitHub secrets and push to main branch
+# Automatic deployment via GitHub Actions
+```
+
+**Alternative Options:**
+- **Azure Container Instances** - Copy `deploy/azure-deploy.yml`
+- **Google Cloud Run** - Copy `deploy/gcp-deploy.yml`
+
+See `deploy/README.md` for detailed setup instructions.
+
 ## API Endpoints
 
 ### Authentication

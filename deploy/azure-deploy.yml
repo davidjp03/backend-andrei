@@ -1,0 +1,48 @@
+name: Deploy to Azure Container Instances
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AZURE_RESOURCE_GROUP: parcial-backend-rg
+  AZURE_LOCATION: eastus
+  CONTAINER_NAME: parcial-backend
+  REGISTRY_NAME: parcialbackendacr
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Build and push to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - run: |
+        docker build -f Dockerfile.prod -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} .
+        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+    
+    - name: Deploy to Azure Container Instances
+      uses: azure/aci-deploy@v1
+      with:
+        resource-group: ${{ env.AZURE_RESOURCE_GROUP }}
+        dns-name-label: parcial-backend-${{ github.run_number }}
+        image: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+        registry-login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
+        registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        name: ${{ env.CONTAINER_NAME }}
+        location: ${{ env.AZURE_LOCATION }}
+        ports: 3000
+        environment-variables: NODE_ENV=production
+        secure-environment-variables: DATABASE_URL=${{ secrets.DATABASE_URL }} JWT_SECRET=${{ secrets.JWT_SECRET }}
