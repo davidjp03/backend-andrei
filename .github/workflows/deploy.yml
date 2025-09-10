@@ -2,9 +2,9 @@ name: Deploy to AWS ECS
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, working-version ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, working-version ]
 
 env:
   AWS_REGION: us-east-1
@@ -37,7 +37,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/working-version'
     
     steps:
     - name: Checkout
